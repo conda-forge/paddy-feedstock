@@ -1,0 +1,60 @@
+schema_version: 1
+
+context:
+  name: paddy
+  version: 0.2.1
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://github.com/chopralab/paddy/releases/download/${{ version }}/paddy-${{ version }}.tar.gz
+  sha256: 54fe227080fb03a94fb3139b30112f257aa627cc1b7f823040e08f397257ebfb
+  patches:
+    - setup.patch
+
+build:
+  number: 2
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv
+
+requirements:
+  host:
+    - python ${{ python_min }}.*
+    - pip
+    - setuptools
+  run:
+    - python >=${{ python_min }}
+    - scikit-learn
+    - future
+    - numpy
+    - matplotlib-base
+
+tests:
+  - python:
+      imports:
+        - paddy
+      python_version: ${{ python_min }}.*
+  - requirements:
+      run:
+        - pip
+        - python ${{ python_min }}.*
+    script:
+      - pip check
+
+about:
+  summary: "Paddy: Evolutionary Optimization Algorithm for Chemical Systems and Spaces"
+  description: |
+    Paddy is a Python package developed as an extension of the Paddy Field
+    Algorithm, a geneteic, plant based, global optimization algorithm
+    proposed by Premaratne et al. (2009)
+  license: BSD-3-Clause
+  license_file: LICENSE
+  homepage: https://github.com/chopralab/paddy
+  repository: https://chopralab.github.io/paddy/
+  documentation: https://github.com/chopralab/paddy
+
+extra:
+  recipe-maintainers:
+    - jan-janssen
